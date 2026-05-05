@@ -4,56 +4,56 @@
 
 ## 🎯 Objetivo
 
-Construir una app de pantalla única que muestre una lista de tarjetas usando los Core Components y Flexbox. La app debe adaptarse al **dominio que te asignó el instructor**.
+Construir una app de pantalla única que muestre una lista de tarjetas usando los Core Components y Flexbox.
 
-## 📋 Tu Dominio Asignado
+## 📋 Dominio Asignado
 
-**Dominio**: _El instructor te asignará tu dominio al inicio del bootcamp._
+**Dominio**: 🎰 Empresa de Vending Machines  
+**Aprendiz**: Diego Palencia  
+**ID**: 3171599
 
-Cada aprendiz trabaja sobre un dominio único para evitar copias y fomentar implementaciones originales.
+## 🎰 Elemento del Dominio
 
-## 💡 Ejemplos de Adaptación por Dominio
-
-| Dominio | Elemento | Datos en la tarjeta |
-| ------- | -------- | ------------------- |
-| 📖 Biblioteca | Libro | Título, autor, año, portada |
-| 💊 Farmacia | Medicamento | Nombre, principio activo, precio |
-| 🏋️ Gimnasio | Miembro | Nombre, plan, fecha de vencimiento |
-| 🍽️ Restaurante | Platillo | Nombre, precio, descripción |
-| 🏥 Hospital | Médico | Nombre, especialidad, consultorio |
-| 🎥 Cine | Película | Título, género, director, estreno |
-| ✈️ Agencia de viajes | Destino | Ciudad, país, precio, imagen |
-| 🏦 Banco | Cuenta | Tipo, número (enmascarado), saldo |
+| Campo | Descripción |
+| ----- | ----------- |
+| `name` | Nombre del producto |
+| `subtitle` | Descripción corta |
+| `category` | Categoría (Bebidas, Snacks, Dulces) |
+| `price` | Precio en COP |
+| `stock` | Unidades disponibles |
+| `machine` | Ubicación de la máquina |
+| `available` | Si está disponible o agotado |
 
 ## ✅ Requisitos Funcionales
 
-1. **Pantalla principal** con ScrollView o lista de tarjetas
-2. **Mínimo 3 tarjetas** con datos coherentes al dominio
-3. Cada tarjeta debe mostrar:
-   - Una imagen (local o URL)
-   - Al menos 2 textos con estilos distintos (nombre, subtítulo)
-   - Una acción (`Pressable`) con feedback visual
-4. **Header** de la app con el nombre del dominio
+1. **Pantalla principal** con ScrollView de tarjetas
+2. **5 productos** con datos coherentes al dominio
+3. Cada tarjeta muestra:
+   - Una imagen (URL)
+   - Nombre y categoría con estilos distintos
+   - Precio, stock y ubicación de la máquina
+   - Un `Pressable` con feedback visual (comprar / agotado)
+4. **Header** con el nombre del dominio
 5. Estilos con `StyleSheet.create` (sin estilos inline)
-6. TypeScript: interfaces definidas para los datos del dominio
+6. TypeScript: interfaz `Item` definida en `src/types/index.ts`
 
-## 📁 Estructura del starter
+## 📁 Estructura del proyecto
 
 ```
 starter/
-├── App.tsx               # Punto de entrada
-├── package.json          # Dependencias exactas
-├── tsconfig.json         # Configuración TypeScript
-├── app.json              # Configuración Expo
+├── App.tsx
+├── package.json
+├── tsconfig.json
+├── app.json
 └── src/
     ├── types/
-    │   └── index.ts      # Interfaz del elemento del dominio
+    │   └── index.ts
     ├── data/
-    │   └── mockData.ts   # Datos de ejemplo (mínimo 4 elementos)
+    │   └── mockData.ts
     ├── components/
-    │   └── ItemCard.tsx  # Componente tarjeta reutilizable
+    │   └── ItemCard.tsx
     └── screens/
-        └── HomeScreen.tsx # Pantalla principal con la lista
+        └── HomeScreen.tsx
 ```
 
 ## 🚀 Cómo ejecutar
@@ -67,17 +67,13 @@ pnpm start
 ## 🛠️ Entregables
 
 1. App funcional en simulador iOS y/o Android
-2. Mínimo 3 tarjetas con datos de tu dominio
-3. Código subido al repositorio con tu nombre de dominio en el `app.json`
+2. 5 tarjetas de productos de vending machines
+3. Código subido al repositorio
 4. Screenshot o grabación de la app en simulador
-
-## 📊 Criterios de Evaluación
-
-Ver [../../rubrica-evaluacion.md](../../rubrica-evaluacion.md)
 
 ## 📌 Restricciones
 
-- ❌ No usar `position: 'absolute'` (solo Flexbox esta semana)
-- ❌ No usar ninguna librería de UI externa (solo componentes nativos de RN)
-- ❌ No usar estilos inline (`style={{ ... }}` directo en JSX)
+- ❌ No usar `position: 'absolute'` (solo Flexbox)
+- ❌ No usar librerías de UI externas
+- ❌ No usar estilos inline
 - ✅ Todo el código en TypeScript con tipos explícitos
