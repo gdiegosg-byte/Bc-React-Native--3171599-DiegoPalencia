@@ -1,43 +1,57 @@
-// ============================================================
-// MOCK DATA — src/data/mockData.ts
-// ============================================================
-// Datos de ejemplo para tu dominio asignado.
-// Reemplaza estos datos con información coherente a tu dominio.
-// ============================================================
+// Datos de ejemplo — Flota de máquinas vending
+// Bootcamp React Native — Diego Palencia 3171599
 
-import { Item } from '../types';
+import { VendingMachine } from '@/types';
 
-// TODO: Reemplaza los valores por datos reales de tu dominio
-// Usa imágenes representativas — puedes usar URLs de picsum.photos
-// o incluir imágenes locales en assets/
-
-export const MOCK_ITEMS: Item[] = [
+export const maquinas: VendingMachine[] = [
   {
-    id: '1',
-    name: 'Nombre del elemento 1',
-    subtitle: 'Subtítulo o descripción corta',
-    imageUri: 'https://picsum.photos/seed/item1/300/200',
-    // TODO: Agrega las propiedades específicas de tu dominio
+    id: 'vm-001',
+    codigo: 'VM-AND-01',
+    ubicacion: 'C.C. Andino',
+    zona: 'Piso 2 — Zona de Comidas',
+    estado: 'Operativa',
+    stockPorcentaje: 82,
+    imagen: 'https://images.unsplash.com/photo-1612528443702-f6741f70a049?w=400',
+    ultimaRevision: '2025-05-01',
   },
   {
-    id: '2',
-    name: 'Nombre del elemento 2',
-    subtitle: 'Subtítulo o descripción corta',
-    imageUri: 'https://picsum.photos/seed/item2/300/200',
-    // TODO: Agrega las propiedades específicas de tu dominio
+    id: 'vm-002',
+    codigo: 'VM-UNI-01',
+    ubicacion: 'Universidad Nacional',
+    zona: 'Edificio Cafetería — Planta Baja',
+    estado: 'Operativa',
+    stockPorcentaje: 55,
+    imagen: 'https://images.unsplash.com/photo-1612528443702-f6741f70a049?w=400',
+    ultimaRevision: '2025-04-28',
   },
   {
-    id: '3',
-    name: 'Nombre del elemento 3',
-    subtitle: 'Subtítulo o descripción corta',
-    imageUri: 'https://picsum.photos/seed/item3/300/200',
-    // TODO: Agrega las propiedades específicas de tu dominio
+    id: 'vm-003',
+    codigo: 'VM-OFC-01',
+    ubicacion: 'Torre Empresarial Centro',
+    zona: 'Lobby Principal',
+    estado: 'Mantenimiento',
+    stockPorcentaje: 15,
+    imagen: 'https://images.unsplash.com/photo-1612528443702-f6741f70a049?w=400',
+    ultimaRevision: '2025-05-06',
   },
   {
-    id: '4',
-    name: 'Nombre del elemento 4',
-    subtitle: 'Subtítulo o descripción corta',
-    imageUri: 'https://picsum.photos/seed/item4/300/200',
-    // TODO: Agrega las propiedades específicas de tu dominio
+    id: 'vm-004',
+    codigo: 'VM-AER-01',
+    ubicacion: 'Aeropuerto El Dorado',
+    zona: 'Terminal 1 — Sala de Abordaje',
+    estado: 'Fuera de servicio',
+    stockPorcentaje: 0,
+    imagen: 'https://images.unsplash.com/photo-1612528443702-f6741f70a049?w=400',
+    ultimaRevision: '2025-04-20',
+  },
+  {
+    id: 'vm-005',
+    codigo: 'VM-HOS-01',
+    ubicacion: 'Hospital Universitario',
+    zona: 'Pasillo Urgencias — Piso 1',
+    estado: 'Operativa',
+    stockPorcentaje: 70,
+    imagen: 'https://images.unsplash.com/photo-1612528443702-f6741f70a049?w=400',
+    ultimaRevision: '2025-05-03',
   },
 ];

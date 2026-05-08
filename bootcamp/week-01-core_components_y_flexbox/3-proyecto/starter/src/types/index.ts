@@ -1,21 +1,15 @@
-// ============================================================
-// TYPES — src/types/index.ts
-// ============================================================
-// Define aquí la interfaz del elemento de tu dominio asignado.
-// Este type se usará en mockData.ts, ItemCard.tsx y HomeScreen.tsx
-// ============================================================
+// Tipos del dominio: Empresa de Vending Machines
+// Bootcamp React Native — Diego Palencia 3171599
 
-// TODO: Renombra esta interfaz con el nombre de tu elemento
-// Ejemplos: Book, Medication, Member, Dish, Movie, Destination
-export interface Item {
+export type EstadoMaquina = 'Operativa' | 'Mantenimiento' | 'Fuera de servicio';
+
+export interface VendingMachine {
   id: string;
-  name: string;
-  imageUri: string;
-  // TODO: Agrega las propiedades específicas de tu dominio
-  // Ejemplos:
-  //   Biblioteca → author: string; year: number;
-  //   Farmacia → activeIngredient: string; price: number;
-  //   Gimnasio → plan: string; expiresAt: string;
-  //   Restaurante → price: number; description: string;
-  subtitle: string; // campo genérico de apoyo — personaliza según tu dominio
+  codigo: string;        // Ej: VM-AND-01
+  ubicacion: string;     // Sede donde está instalada
+  zona: string;          // Área específica dentro de la sede
+  estado: EstadoMaquina;
+  stockPorcentaje: number; // 0 a 100
+  imagen: string;          // URL de la imagen
+  ultimaRevision: string;  // Fecha de última revisión
 }
