@@ -1,9 +1,5 @@
-// ============================================================
-// SCREEN: HomeScreen
-// ============================================================
-// Pantalla principal: header con el nombre del dominio
-// y lista de tarjetas usando ScrollView.
-// ============================================================
+// Pantalla principal — Lista de máquinas vending
+// Bootcamp React Native — Diego Palencia 3171599
 
 import React from 'react';
 import {
@@ -13,116 +9,112 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
+  Alert,
 } from 'react-native';
-import { Item } from '../types';
-import { ItemCard } from '../components/ItemCard';
-import { MOCK_ITEMS } from '../data/mockData';
+import { VendingCard } from '@/components/VendingCard';
+import { maquinas } from '@/data/mockData';
 
+// ─── Componente ──────────────────────────────────────────────────────────────
 export function HomeScreen(): React.JSX.Element {
-  // TODO: Personaliza el título con el nombre de tu dominio
-  // Ejemplos: 'Mi Biblioteca', 'Farmacia Central', 'GymApp', 'Menú del Día'
-  const DOMAIN_TITLE = 'Mi App';
-  const DOMAIN_SUBTITLE = 'Subtítulo del dominio';
 
-  /**
-   * Handles item card press.
-   * For now, just logs the item name. In week-03 we'll add navigation.
-   */
-  function handleItemPress(item: Item): void {
-    // TODO: Mostrar un alert o log con el nombre del item
-    console.log('Item seleccionado:', item.name);
+  const operativas = maquinas.filter(m => m.estado === 'Operativa').length;
+  const total = maquinas.length;
+
+  function handleVerDetalle(id: string): void {
+    const maquina = maquinas.find(m => m.id === id);
+    if (maquina) {
+      Alert.alert(
+        maquina.codigo,
+        `Ubicación: ${maquina.ubicacion}\nZona: ${maquina.zona}\nStock: ${maquina.stockPorcentaje}%`,
+        [{ text: 'Cerrar' }]
+      );
+    }
   }
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor="#0d1117" />
 
-      {/* ============================================
-          TODO: Implementar el Header de la app
-          Debe mostrar: título del dominio y subtítulo
-          Usa flexDirection: 'column' o 'row' según el diseño
-          ============================================ */}
+      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>{DOMAIN_TITLE}</Text>
-        <Text style={styles.headerSubtitle}>{DOMAIN_SUBTITLE}</Text>
+        <View>
+          <Text style={styles.headerTitulo}>🥤 VendApp</Text>
+          <Text style={styles.headerSubtitulo}>Gestión de Máquinas</Text>
+        </View>
+        <View style={styles.headerBadge}>
+          <Text style={styles.headerBadgeTexto}>{operativas}/{total}</Text>
+          <Text style={styles.headerBadgeLabel}>Operativas</Text>
+        </View>
       </View>
 
-      {/* ============================================
-          TODO: Implementar la lista de tarjetas
-          Usa ScrollView para permitir scroll vertical
-          Renderiza un ItemCard por cada elemento en MOCK_ITEMS
-          ============================================ */}
+      {/* Lista de tarjetas */}
       <ScrollView
-        style={styles.listContainer}
-        contentContainerStyle={styles.listContent}
+        style={styles.lista}
+        contentContainerStyle={styles.listaContenido}
         showsVerticalScrollIndicator={false}
       >
-        {/* TODO: Reemplaza este placeholder por el render real de las tarjetas */}
-        {/* Ejemplo de cómo renderizar la lista:
-        {MOCK_ITEMS.map((item) => (
-          <ItemCard
-            key={item.id}
-            item={item}
-            onPress={handleItemPress}
+        {maquinas.map(maquina => (
+          <VendingCard
+            key={maquina.id}
+            maquina={maquina}
+            onPress={handleVerDetalle}
           />
         ))}
-        */}
-        <View style={styles.emptyState}>
-          <Text style={styles.emptyText}>Lista de tarjetas — por implementar</Text>
-          <Text style={styles.emptyHint}>
-            Renderiza los {MOCK_ITEMS.length} items de MOCK_ITEMS usando ItemCard
-          </Text>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
+// ─── Estilos ─────────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#0d1117',
   },
-
-  // Header — TODO: ajusta según el diseño de tu dominio
   header: {
-    paddingHorizontal: 16,
-    paddingVertical: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#30363d',
+    borderBottomColor: '#21262d',
+    backgroundColor: '#0d1117',
   },
-  headerTitle: {
-    fontSize: 28,
+  headerTitulo: {
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: '#e6edf3',
   },
-  headerSubtitle: {
-    fontSize: 14,
+  headerSubtitulo: {
+    fontSize: 13,
     color: '#8b949e',
-    marginTop: 4,
+    marginTop: 2,
   },
-
-  // List
-  listContainer: {
+  headerBadge: {
+    backgroundColor: '#161b22',
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#30363d',
+  },
+  headerBadgeTexto: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#22c55e',
+  },
+  headerBadgeLabel: {
+    fontSize: 10,
+    color: '#6e7681',
+    marginTop: 1,
+  },
+  lista: {
     flex: 1,
   },
-  listContent: {
-    padding: 16,
-  },
-
-  // Empty state placeholder — elimina cuando implementes la lista real
-  emptyState: {
-    alignItems: 'center',
-    paddingTop: 60,
-    gap: 8,
-  },
-  emptyText: {
-    color: '#8b949e',
-    fontSize: 16,
-  },
-  emptyHint: {
-    color: '#30363d',
-    fontSize: 13,
-    textAlign: 'center',
+  listaContenido: {
+    paddingVertical: 12,
+    paddingBottom: 32,
   },
 });
