@@ -1,30 +1,18 @@
-// ============================================
 // THEME — Semana 02
-// Constantes de estilo globales.
-// Úsalas en todos los StyleSheet del proyecto.
-// ============================================
+// Dominio: Empresa de Vending Machines
+// Diego Palencia — 3171599
 
 export const COLORS = {
-  // Fondos
   background: '#0d1117',
   surface: '#161b22',
   surfaceAlt: '#21262d',
-
-  // Bordes
   border: '#30363d',
   borderLight: '#21262d',
-
-  // Texto
   textPrimary: '#e6edf3',
   textSecondary: '#8b949e',
   textMuted: '#6e7681',
-
-  // Acento — puedes cambiar este color según tu dominio
-  // Ejemplos: '#3fb950' (verde), '#f0883e' (naranja), '#a5d6ff' (azul claro)
-  accent: '#61DAFB',
-  accentDim: '#61DAFB33',
-
-  // Semánticos
+  accent: '#f0883e',      // Naranja vending
+  accentDim: '#f0883e33',
   success: '#3fb950',
   warning: '#f0883e',
   error: '#f85149',
@@ -32,7 +20,6 @@ export const COLORS = {
 } as const;
 
 export const TYPOGRAPHY = {
-  // Tamaños de fuente
   size: {
     xs: 11,
     sm: 13,
@@ -42,8 +29,6 @@ export const TYPOGRAPHY = {
     xl: 24,
     xxl: 30,
   },
-
-  // Pesos
   weight: {
     regular: '400' as const,
     medium: '500' as const,

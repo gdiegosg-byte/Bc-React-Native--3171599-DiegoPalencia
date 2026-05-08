@@ -1,68 +1,128 @@
-import { Item } from '../types';
-
-// ============================================
 // MOCK DATA — Semana 02
-// Reemplaza estos items genéricos con datos
-// reales de tu dominio asignado.
-//
-// REQUISITO: mínimo 10 items
-// ============================================
+// Dominio: Empresa de Vending Machines
+// Diego Palencia — 3171599
 
-// TODO: Renombra ITEMS a algo descriptivo de tu dominio
-//       Ejemplo: BOOKS, MEDICINES, MEMBERS, DISHES...
-// TODO: Actualiza el tipo Item con los campos de tu dominio
-// TODO: Rellena con datos reales y variados de tu dominio
+import { Item } from '../types';
 
 export const ITEMS: Item[] = [
   {
     id: '1',
-    name: 'Elemento 01',
-    // TODO: agregar campos de tu dominio
+    name: 'VM-AND-01',
+    ubicacion: 'C.C. Andino',
+    zona: 'Piso 2 — Zona de Comidas',
+    estado: 'Operativa',
+    stockPorcentaje: 82,
+    categoria: 'Mixta',
+    ultimaRevision: '2025-05-01',
   },
   {
     id: '2',
-    name: 'Elemento 02',
-    // TODO: agregar campos de tu dominio
+    name: 'VM-UNI-01',
+    ubicacion: 'Universidad Nacional',
+    zona: 'Edificio Cafetería — Planta Baja',
+    estado: 'Operativa',
+    stockPorcentaje: 55,
+    categoria: 'Bebidas',
+    ultimaRevision: '2025-04-28',
   },
   {
     id: '3',
-    name: 'Elemento 03',
-    // TODO: agregar campos de tu dominio
+    name: 'VM-OFC-01',
+    ubicacion: 'Torre Empresarial Centro',
+    zona: 'Lobby Principal',
+    estado: 'Mantenimiento',
+    stockPorcentaje: 15,
+    categoria: 'Snacks',
+    ultimaRevision: '2025-05-06',
   },
   {
     id: '4',
-    name: 'Elemento 04',
-    // TODO: agregar campos de tu dominio
+    name: 'VM-AER-01',
+    ubicacion: 'Aeropuerto El Dorado',
+    zona: 'Terminal 1 — Sala de Abordaje',
+    estado: 'Fuera de servicio',
+    stockPorcentaje: 0,
+    categoria: 'Mixta',
+    ultimaRevision: '2025-04-20',
   },
   {
     id: '5',
-    name: 'Elemento 05',
-    // TODO: agregar campos de tu dominio
+    name: 'VM-HOS-01',
+    ubicacion: 'Hospital Universitario',
+    zona: 'Pasillo Urgencias — Piso 1',
+    estado: 'Operativa',
+    stockPorcentaje: 70,
+    categoria: 'Saludable',
+    ultimaRevision: '2025-05-03',
   },
   {
     id: '6',
-    name: 'Elemento 06',
-    // TODO: agregar campos de tu dominio
+    name: 'VM-GIM-01',
+    ubicacion: 'Gimnasio SmartFit Chapinero',
+    zona: 'Recepción Principal',
+    estado: 'Operativa',
+    stockPorcentaje: 90,
+    categoria: 'Saludable',
+    ultimaRevision: '2025-05-05',
   },
   {
     id: '7',
-    name: 'Elemento 07',
-    // TODO: agregar campos de tu dominio
+    name: 'VM-COL-01',
+    ubicacion: 'Colegio Distrital Los Andes',
+    zona: 'Patio Central',
+    estado: 'Operativa',
+    stockPorcentaje: 40,
+    categoria: 'Snacks',
+    ultimaRevision: '2025-04-30',
   },
   {
     id: '8',
-    name: 'Elemento 08',
-    // TODO: agregar campos de tu dominio
+    name: 'VM-BIB-01',
+    ubicacion: 'Biblioteca Luis Ángel Arango',
+    zona: 'Sala de Lectura — Piso 3',
+    estado: 'Operativa',
+    stockPorcentaje: 60,
+    categoria: 'Bebidas',
+    ultimaRevision: '2025-05-02',
   },
   {
     id: '9',
-    name: 'Elemento 09',
-    // TODO: agregar campos de tu dominio
+    name: 'VM-MET-01',
+    ubicacion: 'Estación Metro Calle 72',
+    zona: 'Acceso Principal',
+    estado: 'Mantenimiento',
+    stockPorcentaje: 5,
+    categoria: 'Mixta',
+    ultimaRevision: '2025-05-07',
   },
   {
     id: '10',
-    name: 'Elemento 10',
-    // TODO: agregar campos de tu dominio
+    name: 'VM-HOT-01',
+    ubicacion: 'Hotel Dann Carlton',
+    zona: 'Piso 8 — Área de Piscina',
+    estado: 'Operativa',
+    stockPorcentaje: 75,
+    categoria: 'Bebidas',
+    ultimaRevision: '2025-05-04',
   },
-  // TODO: puedes agregar más items para hacer la demo más rica
+  {
+    id: '11',
+    name: 'VM-EST-01',
+    ubicacion: 'Estadio El Campín',
+    zona: 'Tribuna Norte — Acceso B',
+    estado: 'Operativa',
+    stockPorcentaje: 95,
+    categoria: 'Snacks',
+    ultimaRevision: '2025-05-06',
+  },
+  {
+    id: '12',
+    name: 'VM-CLN-01',
+    ubicacion: 'Clínica Country',
+    zona: 'Sala de Espera — Piso 2',
+    estado: 'Operativa',
+    stockPorcentaje: 50,
+    categoria: 'Saludable',
+    ultimaRevision: '2025-05-01',
+  },
 ];

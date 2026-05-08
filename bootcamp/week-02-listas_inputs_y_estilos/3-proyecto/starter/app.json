@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mi-app-semana02",
-    "slug": "mi-app-semana02",
+    "name": "VendApp",
+    "slug": "vendapp-3171599-diegopalencia",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,13 +13,15 @@
       "backgroundColor": "#0d1117"
     },
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.bootcamp.vendapp.3171599"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0d1117"
-      }
+      },
+      "package": "com.bootcamp.vendapp3171599"
     }
   }
 }
