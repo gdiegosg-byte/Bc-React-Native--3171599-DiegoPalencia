@@ -1,29 +1,52 @@
 // src/screens/FavoritesScreen.tsx
 // Segunda pestaña del Tab Navigator.
-// Muestra una lista de elementos favoritos del dominio.
+// Muestra los productos favoritos / más populares de las máquinas.
 
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 import { FAVORITES } from '../data/mockData';
 import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../theme';
 import type { Item } from '../types';
 
+const CATEGORY_COLORS: Record<Item['category'], string> = {
+  bebida: COLORS.categoryBebida,
+  snack: COLORS.categorySnack,
+  dulce: COLORS.categoryDulce,
+  saludable: COLORS.categorySaludable,
+};
+
+const CATEGORY_EMOJI: Record<Item['category'], string> = {
+  bebida: '🥤',
+  snack: '🍿',
+  dulce: '🍫',
+  saludable: '🥗',
+};
+
 export function FavoritesScreen(): React.JSX.Element {
-  /**
-   * Renderiza cada ítem favorito.
-   * TODO: adaptar el diseño a tu dominio (igual que HomeScreen.renderItem)
-   */
   function renderFavorite({ item }: { item: Item }): React.JSX.Element {
+    const categoryColor = CATEGORY_COLORS[item.category];
+    const categoryEmoji = CATEGORY_EMOJI[item.category];
+
     return (
       <View style={styles.card}>
-        {/* Ícono de favorito */}
         <Text style={styles.heartIcon}>♥</Text>
         <View style={styles.cardContent}>
+          <View style={styles.row}>
+            <Text style={styles.emoji}>{categoryEmoji}</Text>
+            <View style={[styles.categoryBadge, { backgroundColor: categoryColor + '33' }]}>
+              <Text style={[styles.categoryText, { color: categoryColor }]}>
+                {item.category.toUpperCase()}
+              </Text>
+            </View>
+          </View>
           <Text style={styles.itemName}>{item.name}</Text>
           <Text style={styles.itemDescription} numberOfLines={2}>
             {item.description}
           </Text>
-          {/* TODO: agregar campos de tu dominio igual que en HomeScreen */}
+          <View style={styles.infoRow}>
+            <Text style={styles.price}>${item.price.toLocaleString('es-CO')}</Text>
+            <Text style={styles.calories}>{item.calories} kcal</Text>
+          </View>
         </View>
       </View>
     );
@@ -31,9 +54,7 @@ export function FavoritesScreen(): React.JSX.Element {
 
   return (
     <View style={styles.container}>
-      {/* TODO: cambiar el título según tu dominio */}
-      {/* Ejemplos: "Mis Libros Favoritos", "Medicamentos Guardados", etc. */}
-      <Text style={styles.title}>Favoritos</Text>
+      <Text style={styles.title}>Mis Favoritos</Text>
       <FlatList
         data={FAVORITES}
         keyExtractor={(item) => item.id}
@@ -42,10 +63,7 @@ export function FavoritesScreen(): React.JSX.Element {
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>
-              {/* TODO: personalizar el mensaje vacío según tu dominio */}
-              No tienes favoritos todavía
-            </Text>
+            <Text style={styles.emptyText}>No tienes productos favoritos todavía</Text>
           </View>
         }
       />
@@ -87,17 +105,49 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     flex: 1,
+    gap: SPACING.xs,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  emoji: {
+    fontSize: TYPOGRAPHY.size.lg,
+  },
+  categoryBadge: {
+    borderRadius: RADIUS.full,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 2,
+  },
+  categoryText: {
+    fontSize: TYPOGRAPHY.size.xs,
+    fontWeight: TYPOGRAPHY.weight.bold,
+    letterSpacing: 0.5,
   },
   itemName: {
     fontSize: TYPOGRAPHY.size.base,
     fontWeight: TYPOGRAPHY.weight.semibold,
     color: COLORS.textPrimary,
-    marginBottom: SPACING.xs,
   },
   itemDescription: {
     fontSize: TYPOGRAPHY.size.sm,
     color: COLORS.textSecondary,
     lineHeight: 18,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: SPACING.xs,
+  },
+  price: {
+    fontSize: TYPOGRAPHY.size.base,
+    fontWeight: TYPOGRAPHY.weight.bold,
+    color: COLORS.accent,
+  },
+  calories: {
+    fontSize: TYPOGRAPHY.size.sm,
+    color: COLORS.textMuted,
   },
   separator: {
     height: SPACING.sm,

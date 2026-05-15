@@ -1,67 +1,75 @@
 // src/screens/HomeScreen.tsx
-// Pantalla de lista — muestra todos los elementos del dominio.
-// Al presionar un ítem navega al DetailScreen pasando los params.
+// Pantalla de catálogo — muestra todos los productos disponibles en las máquinas.
+// Al presionar un producto navega al DetailScreen con sus datos.
 
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { ITEMS } from '../data/mockData';
 import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../theme';
 import type { Item } from '../types';
 import type { HomeStackParamList } from '../navigation/types';
 
-// Tipo del navigation hook para este Stack
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
   'HomeList'
 >;
 
+// Mapa de colores por categoría
+const CATEGORY_COLORS: Record<Item['category'], string> = {
+  bebida: COLORS.categoryBebida,
+  snack: COLORS.categorySnack,
+  dulce: COLORS.categoryDulce,
+  saludable: COLORS.categorySaludable,
+};
+
 export function HomeScreen(): React.JSX.Element {
   const navigation = useNavigation<HomeScreenNavigationProp>();
 
-  /**
-   * Navega al DetailScreen pasando los datos del ítem seleccionado.
-   * TODO: agrega los campos extra de tu dominio a los params
-   * Ejemplo: navigation.navigate('HomeDetail', { id, name, author, isbn })
-   */
   function handleItemPress(item: Item): void {
     navigation.navigate('HomeDetail', {
       id: item.id,
       name: item.name,
-      // TODO: pasar campos adicionales de tu dominio
+      price: item.price,
+      stock: item.stock,
+      category: item.category,
+      calories: item.calories,
+      description: item.description,
+      machineId: item.machineId,
     });
   }
 
-  /**
-   * Renderiza cada ítem de la lista.
-   * TODO: adaptar el diseño de la tarjeta a tu dominio.
-   * Puedes mostrar más información (precio, autor, género, etc.)
-   */
   function renderItem({ item }: { item: Item }): React.JSX.Element {
+    const categoryColor = CATEGORY_COLORS[item.category];
+    const isLowStock = item.stock <= 5;
+
     return (
       <Pressable
-        style={({ pressed }) => [
-          styles.card,
-          pressed && styles.cardPressed,
-        ]}
+        style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
         onPress={() => handleItemPress(item)}
-        // testID permite encontrar el elemento en tests
         testID={`item-${item.id}`}
       >
+        {/* Badge de categoría */}
+        <View style={[styles.categoryBadge, { backgroundColor: categoryColor + '33' }]}>
+          <Text style={[styles.categoryText, { color: categoryColor }]}>
+            {item.category.toUpperCase()}
+          </Text>
+        </View>
+
         <Text style={styles.itemName}>{item.name}</Text>
         <Text style={styles.itemDescription} numberOfLines={2}>
           {item.description}
         </Text>
-        {/* TODO: agregar más información del ítem según tu dominio */}
-        {/* Ejemplo (Farmacia): <Text style={styles.price}>${item.price}</Text> */}
-        {/* Ejemplo (Biblioteca): <Text style={styles.author}>{item.author}</Text> */}
+
+        {/* Fila de precio y stock */}
+        <View style={styles.row}>
+          <Text style={styles.price}>${item.price.toLocaleString('es-CO')}</Text>
+          <Text style={[styles.stock, isLowStock && styles.stockLow]}>
+            {isLowStock ? `⚠ Solo ${item.stock}` : `✓ ${item.stock} disponibles`}
+          </Text>
+        </View>
+
         <Text style={styles.chevron}>{'›'}</Text>
       </Pressable>
     );
@@ -69,17 +77,20 @@ export function HomeScreen(): React.JSX.Element {
 
   return (
     <View style={styles.container}>
-      {/* TODO: agregar un header o título descriptivo de tu dominio */}
-      {/* <Text style={styles.header}>Mi Biblioteca</Text> */}
       <FlatList
         data={ITEMS}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         contentContainerStyle={styles.list}
-        // Separador visual entre ítems
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        // TODO: agregar ListEmptyComponent para cuando no haya datos
-        // ListEmptyComponent={<Text style={styles.empty}>Sin elementos</Text>}
+        ListHeaderComponent={
+          <Text style={styles.header}>🏪 {ITEMS.length} productos disponibles</Text>
+        }
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No hay productos disponibles</Text>
+          </View>
+        }
       />
     </View>
   );
@@ -89,6 +100,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
+  },
+  header: {
+    fontSize: TYPOGRAPHY.size.sm,
+    color: COLORS.textMuted,
+    marginBottom: SPACING.md,
   },
   list: {
     padding: SPACING.base,
@@ -104,6 +120,18 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     backgroundColor: COLORS.surfaceAlt,
   },
+  categoryBadge: {
+    alignSelf: 'flex-start',
+    borderRadius: RADIUS.full,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 2,
+    marginBottom: SPACING.xs,
+  },
+  categoryText: {
+    fontSize: TYPOGRAPHY.size.xs,
+    fontWeight: TYPOGRAPHY.weight.bold,
+    letterSpacing: 0.5,
+  },
   itemName: {
     fontSize: TYPOGRAPHY.size.md,
     fontWeight: TYPOGRAPHY.weight.semibold,
@@ -114,6 +142,24 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.size.sm,
     color: COLORS.textSecondary,
     lineHeight: 18,
+    marginBottom: SPACING.sm,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  price: {
+    fontSize: TYPOGRAPHY.size.md,
+    fontWeight: TYPOGRAPHY.weight.bold,
+    color: COLORS.accent,
+  },
+  stock: {
+    fontSize: TYPOGRAPHY.size.xs,
+    color: COLORS.success,
+  },
+  stockLow: {
+    color: COLORS.warning,
   },
   chevron: {
     position: 'absolute',
@@ -124,5 +170,13 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: SPACING.sm,
+  },
+  emptyContainer: {
+    paddingTop: SPACING.xxl,
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: TYPOGRAPHY.size.base,
+    color: COLORS.textMuted,
   },
 });

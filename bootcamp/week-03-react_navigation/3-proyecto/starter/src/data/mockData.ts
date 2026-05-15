@@ -1,81 +1,102 @@
 // src/data/mockData.ts
-// Datos de prueba genéricos para la app.
-// TODO: reemplazar con datos de tu dominio asignado.
+// Datos de prueba para la app de Vending Machines.
 
 import type { Item } from '../types';
 
 // ============================================
-// LISTA PRINCIPAL DE ELEMENTOS
+// LISTA PRINCIPAL DE PRODUCTOS
 // ============================================
-// Estos son datos genéricos de placeholder.
-// Debes reemplazarlos con datos coherentes a tu dominio.
-//
-// Ejemplos:
-//   Biblioteca  → libros con autor, ISBN, páginas
-//   Farmacia    → medicamentos con precio, stock, dosis
-//   Gimnasio    → rutinas con duración, grupos musculares
-//   Restaurante → platillos con precio, ingredientes
-//   Cine        → películas con director, año, género
 
 export const ITEMS: Item[] = [
   {
     id: '1',
-    name: 'Elemento 01',
-    description: 'Descripción del primer elemento de tu dominio.',
-    // TODO: agregar campos específicos de tu dominio
+    name: 'Coca-Cola 350ml',
+    description: 'Bebida gaseosa clásica, fría y refrescante. La favorita de la oficina.',
+    price: 3500,
+    stock: 12,
+    category: 'bebida',
+    calories: 140,
+    machineId: 'VM-001',
   },
   {
     id: '2',
-    name: 'Elemento 02',
-    description: 'Descripción del segundo elemento de tu dominio.',
-    // TODO: agregar campos específicos de tu dominio
+    name: 'Snickers',
+    description: 'Barra de chocolate con maní, caramelo y nougat. Energía instantánea.',
+    price: 2800,
+    stock: 8,
+    category: 'dulce',
+    calories: 250,
+    machineId: 'VM-001',
   },
   {
     id: '3',
-    name: 'Elemento 03',
-    description: 'Descripción del tercer elemento de tu dominio.',
-    // TODO: agregar campos específicos de tu dominio
+    name: 'Agua Cristal 600ml',
+    description: 'Agua purificada sin gas. Hidratación pura en cualquier momento.',
+    price: 2000,
+    stock: 20,
+    category: 'saludable',
+    calories: 0,
+    machineId: 'VM-002',
   },
   {
     id: '4',
-    name: 'Elemento 04',
-    description: 'Descripción del cuarto elemento de tu dominio.',
-    // TODO: agregar campos específicos de tu dominio
+    name: 'Doritos Nacho',
+    description: 'Chips de maíz con sabor a nacho. El snack perfecto para el descanso.',
+    price: 3200,
+    stock: 6,
+    category: 'snack',
+    calories: 210,
+    machineId: 'VM-001',
   },
   {
     id: '5',
-    name: 'Elemento 05',
-    description: 'Descripción del quinto elemento de tu dominio.',
-    // TODO: agregar campos específicos de tu dominio
+    name: 'Jugo Hit Naranja',
+    description: 'Bebida de fruta natural con vitamina C. Sabor a naranja tropical.',
+    price: 3000,
+    stock: 10,
+    category: 'bebida',
+    calories: 120,
+    machineId: 'VM-002',
   },
   {
     id: '6',
-    name: 'Elemento 06',
-    description: 'Descripción del sexto elemento de tu dominio.',
-    // TODO: agregar campos específicos de tu dominio
+    name: 'Granola Bar Nature Valley',
+    description: 'Barra de granola con avena y miel. Opción saludable y nutritiva.',
+    price: 4000,
+    stock: 5,
+    category: 'saludable',
+    calories: 190,
+    machineId: 'VM-003',
   },
   {
     id: '7',
-    name: 'Elemento 07',
-    description: 'Descripción del séptimo elemento de tu dominio.',
-    // TODO: agregar campos específicos de tu dominio
+    name: 'Chitos',
+    description: 'Palitos de queso crujientes. Clásico snack colombiano irresistible.',
+    price: 1800,
+    stock: 15,
+    category: 'snack',
+    calories: 160,
+    machineId: 'VM-002',
   },
   {
     id: '8',
-    name: 'Elemento 08',
-    description: 'Descripción del octavo elemento de tu dominio.',
-    // TODO: agregar campos específicos de tu dominio
+    name: 'Red Bull 250ml',
+    description: 'Bebida energizante con taurina y cafeína. Para rendir al máximo.',
+    price: 6500,
+    stock: 4,
+    category: 'bebida',
+    calories: 110,
+    machineId: 'VM-003',
   },
 ];
 
 // ============================================
 // LISTA DE FAVORITOS
 // ============================================
-// Subconjunto de elementos para la pestaña Favorites.
-// TODO: seleccionar elementos coherentes con tu dominio.
+// Productos más populares / destacados.
 
 export const FAVORITES: Item[] = [
-  ITEMS[0],
-  ITEMS[2],
-  ITEMS[4],
+  ITEMS[0], // Coca-Cola
+  ITEMS[2], // Agua Cristal
+  ITEMS[4], // Jugo Hit
 ];

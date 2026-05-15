@@ -1,6 +1,5 @@
 // src/types/index.ts
-// Define los tipos de datos del dominio.
-// Adapta la interfaz Item a tu dominio asignado.
+// Define los tipos de datos del dominio: Vending Machines.
 
 // ============================================
 // INTERFACE PRINCIPAL DEL DOMINIO
@@ -8,40 +7,26 @@
 
 export interface Item {
   id: string;
-  // Nombre del elemento (libro, medicamento, película, rutina, etc.)
+  // Nombre del producto (ej: "Coca-Cola 350ml", "Snickers", etc.)
   name: string;
-  // Descripción general del elemento
+  // Descripción general del producto
   description: string;
 
-  // TODO: agregar propiedades específicas de tu dominio
-  // Ejemplos según dominio:
+  // Campos específicos del dominio Vending Machines:
+  price: number;           // Precio en COP (pesos colombianos)
+  stock: number;           // Unidades disponibles en la máquina
+  category: 'bebida' | 'snack' | 'dulce' | 'saludable';
+  calories: number;        // Calorías por porción
+  machineId: string;       // ID de la máquina que tiene este producto
+}
 
-  // Biblioteca:
-  // author: string;
-  // isbn: string;
-  // pages: number;
-  // genre: string;
+// ============================================
+// INTERFACE DE MÁQUINA EXPENDEDORA
+// ============================================
 
-  // Farmacia:
-  // price: number;
-  // stock: number;
-  // dosage: string;
-  // requiresPrescription: boolean;
-
-  // Gimnasio:
-  // duration: number;   // en minutos
-  // difficulty: 'basic' | 'intermediate' | 'advanced';
-  // muscleGroups: string[];
-
-  // Restaurante:
-  // price: number;
-  // ingredients: string[];
-  // isVegetarian: boolean;
-  // category: string;
-
-  // Cine:
-  // director: string;
-  // year: number;
-  // genre: string;
-  // duration: number;
+export interface VendingMachine {
+  id: string;
+  location: string;        // Ubicación física (ej: "Piso 2 - Torre Norte")
+  isOnline: boolean;       // Si la máquina está operativa
+  totalProducts: number;   // Cantidad de productos distintos
 }

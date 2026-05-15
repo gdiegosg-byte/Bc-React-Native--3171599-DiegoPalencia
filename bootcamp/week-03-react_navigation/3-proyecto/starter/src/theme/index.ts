@@ -1,8 +1,5 @@
-// ============================================
-// THEME — Semana 03
-// Constantes de estilo globales.
-// Úsalas en todos los StyleSheet del proyecto.
-// ============================================
+// src/theme/index.ts
+// Constantes de estilo globales para la app de Vending Machines.
 
 export const COLORS = {
   // Fondos
@@ -19,20 +16,24 @@ export const COLORS = {
   textSecondary: '#8b949e',
   textMuted: '#6e7681',
 
-  // Acento — puedes cambiar este color según tu dominio
-  // Ejemplos: '#3fb950' (verde), '#f0883e' (naranja), '#a5d6ff' (azul claro)
-  accent: '#61DAFB',
-  accentDim: '#61DAFB33',
+  // Acento — naranja vibrante (vending / energía)
+  accent: '#f0883e',
+  accentDim: '#f0883e33',
 
   // Semánticos
   success: '#3fb950',
   warning: '#f0883e',
   error: '#f85149',
   info: '#58a6ff',
+
+  // Categorías de productos
+  categoryBebida: '#58a6ff',
+  categorySnack: '#f0883e',
+  categoryDulce: '#f85149',
+  categorySaludable: '#3fb950',
 } as const;
 
 export const TYPOGRAPHY = {
-  // Tamaños de fuente
   size: {
     xs: 11,
     sm: 13,
@@ -42,8 +43,6 @@ export const TYPOGRAPHY = {
     xl: 24,
     xxl: 30,
   },
-
-  // Pesos
   weight: {
     regular: '400' as const,
     medium: '500' as const,
