@@ -1,4 +1,4 @@
-// App.tsx — Semana 04: Estado Global con Zustand
+// App.tsx — Vendify: Gestión de Vending Machines
 // NavigationContainer raíz. No necesita cambios.
 
 import { NavigationContainer } from '@react-navigation/native';

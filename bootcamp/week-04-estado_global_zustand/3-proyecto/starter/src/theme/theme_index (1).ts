@@ -1,28 +1,28 @@
 // src/theme/index.ts
-// Sistema de diseño centralizado del proyecto.
-// Misma paleta que weeks 02-03 para consistencia.
+// Sistema de diseño centralizado de Vendify.
+// Paleta industrial oscura con acento amarillo dorado.
 
 export const COLORS = {
   // Fondos
-  background: '#0d1117',
-  surface: '#161b22',
-  card: '#21262d',
+  background: '#0A0A0A',
+  surface: '#141414',
+  card: '#1A1A1A',
 
   // Texto
-  textPrimary: '#e6edf3',
-  textSecondary: '#8b949e',
-  textMuted: '#484f58',
+  textPrimary: '#F0F0F0',
+  textSecondary: '#888888',
+  textMuted: '#444444',
 
-  // Acento React Native
-  accent: '#61DAFB',
+  // Acento Vendify — amarillo dorado
+  accent: '#F5C842',
 
   // Feedback
-  success: '#3fb950',
-  warning: '#d29922',
-  error: '#f85149',
+  success: '#22C55E',
+  warning: '#F97316',
+  error: '#EF4444',
 
   // Borde
-  border: '#30363d',
+  border: '#2A2A2A',
 } as const;
 
 export const TYPOGRAPHY = {

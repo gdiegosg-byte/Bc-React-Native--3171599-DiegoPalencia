@@ -1,7 +1,6 @@
 // src/screens/DetailScreen.tsx
-// Pantalla de detalle: muestra la información completa de un ítem
-// y permite guardarlo / quitarlo usando el store de Zustand.
-// Esta pantalla demuestra cómo acceder al store desde cualquier screen.
+// Pantalla de detalle de un producto de la vending machine.
+// Permite agregar o quitar el producto de favoritos con Zustand.
 
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -9,78 +8,82 @@ import { useRoute, type RouteProp } from '@react-navigation/native';
 
 import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../theme';
 import type { HomeStackParamList } from '../navigation/types';
-
-// TODO: importar el store y el tipo Item
-// import { useSavedStore } from '../stores/savedStore';
-// import type { Item } from '../types';
-// import { ITEMS } from '../data/mockData';
+import { useSavedStore } from '../stores/savedStore';
+import { ITEMS } from '../data/mockData';
 
 type DetailRouteProp = RouteProp<HomeStackParamList, 'HomeDetail'>;
 
-// ============================================================
-// PANTALLA: DetailScreen
-// ============================================================
-
 export function DetailScreen(): React.JSX.Element {
   const route = useRoute<DetailRouteProp>();
-  const { id, name } = route.params;
+  const { id, name, emoji } = route.params;
 
-  // TODO: buscar el ítem completo en ITEMS usando el id de params
-  // const item: Item | undefined = ITEMS.find((i) => i.id === id);
+  const item = ITEMS.find((i) => i.id === id);
 
-  // ──────────────────────────────────────────────────────────
-  // TODO: obtener los selectores del savedStore
-  // ──────────────────────────────────────────────────────────
-  // Usar selectores individuales para evitar re-renders innecesarios:
-  //
-  // const isItemSaved = useSavedStore((state) => state.isItemSaved);
-  // const addItem    = useSavedStore((state) => state.addItem);
-  // const removeItem = useSavedStore((state) => state.removeItem);
-  //
-  // Luego calcular si el ítem actual está guardado:
-  // const isSaved = isItemSaved(id);
+  const isItemSaved = useSavedStore((state) => state.isItemSaved);
+  const addItem = useSavedStore((state) => state.addItem);
+  const removeItem = useSavedStore((state) => state.removeItem);
 
-  // Placeholder hasta que el store esté implementado
-  const isSaved = false;
+  const isSaved = isItemSaved(id);
 
-  // TODO: implementar handleToggleSave
-  // Si el ítem está guardado → removeItem(id)
-  // Si no está guardado → addItem(item)  [necesitas el objeto Item completo]
   const handleToggleSave = (): void => {
-    // TODO: implementar
-    // if (isSaved) {
-    //   removeItem(id);
-    // } else if (item) {
-    //   addItem(item);
-    // }
+    if (isSaved) {
+      removeItem(id);
+    } else if (item) {
+      addItem(item);
+    }
   };
 
   return (
     <View style={styles.container}>
-      {/* Icono / thumbnail del ítem */}
+      {/* Emoji del producto */}
       <View style={styles.hero}>
-        <Text style={styles.heroLetter}>{name.charAt(0)}</Text>
+        <Text style={styles.heroEmoji}>{emoji}</Text>
       </View>
 
       {/* Información principal */}
       <View style={styles.info}>
         <Text style={styles.title}>{name}</Text>
-        <Text style={styles.id}>ID: {id}</Text>
 
-        {/* TODO: mostrar la descripción del ítem (item.description) */}
-        {/* TODO: mostrar campos específicos de tu dominio */}
-        <Text style={styles.description}>
-          Adapta esta pantalla a tu dominio: muestra los detalles
-          relevantes de tu ítem aquí.
-        </Text>
+        {item && (
+          <>
+            {/* Precio */}
+            <Text style={styles.price}>
+              ${item.price.toLocaleString('es-CO')} COP
+            </Text>
+
+            {/* Descripción */}
+            <Text style={styles.description}>{item.description}</Text>
+
+            {/* Detalles del producto */}
+            <View style={styles.detailsGrid}>
+              <View style={styles.detailItem}>
+                <Text style={styles.detailLabel}>Categoría</Text>
+                <Text style={styles.detailValue}>{item.category}</Text>
+              </View>
+              <View style={styles.detailItem}>
+                <Text style={styles.detailLabel}>Calorías</Text>
+                <Text style={styles.detailValue}>{item.calories} kcal</Text>
+              </View>
+              <View style={styles.detailItem}>
+                <Text style={styles.detailLabel}>Stock</Text>
+                <Text style={[
+                  styles.detailValue,
+                  item.stock === 0 && { color: COLORS.error },
+                  item.stock > 0 && { color: COLORS.success },
+                ]}>
+                  {item.stock === 0 ? 'Agotado' : `${item.stock} unidades`}
+                </Text>
+              </View>
+              <View style={styles.detailItem}>
+                <Text style={styles.detailLabel}>ID Producto</Text>
+                <Text style={styles.detailValue}>#{item.id.padStart(4, '0')}</Text>
+              </View>
+            </View>
+          </>
+        )}
       </View>
 
-      {/* ──────────────────────────────────────────────────── */}
-      {/* BOTÓN GUARDAR / QUITAR — conectado al store Zustand  */}
-      {/* ──────────────────────────────────────────────────── */}
-      {/* Este botón demuestra el estado compartido entre pantallas:
-          al guardar aquí, el badge del Tab "Guardados" se actualiza
-          automáticamente sin necesidad de pasar props ni callbacks. */}
+      {/* Botón Favorito — conectado al store Zustand */}
       <Pressable
         style={({ pressed }) => [
           styles.saveButton,
@@ -91,16 +94,12 @@ export function DetailScreen(): React.JSX.Element {
         testID="save-button"
       >
         <Text style={[styles.saveButtonText, isSaved && styles.saveButtonTextActive]}>
-          {isSaved ? '★  Guardado' : '☆  Guardar'}
+          {isSaved ? '❤️  En favoritos' : '🤍  Agregar a favoritos'}
         </Text>
       </Pressable>
     </View>
   );
 }
-
-// ============================================================
-// ESTILOS
-// ============================================================
 
 const styles = StyleSheet.create({
   container: {
@@ -110,8 +109,8 @@ const styles = StyleSheet.create({
     gap: SPACING.lg,
   },
   hero: {
-    width: 96,
-    height: 96,
+    width: 100,
+    height: 100,
     borderRadius: RADIUS.lg,
     backgroundColor: COLORS.card,
     borderWidth: 1,
@@ -120,27 +119,44 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
   },
-  heroLetter: {
-    fontSize: 40,
-    fontWeight: '700',
+  heroEmoji: { fontSize: 52 },
+  info: { gap: SPACING.sm },
+  title: { ...TYPOGRAPHY.h2 },
+  price: {
+    fontSize: 24,
+    fontWeight: '900',
     color: COLORS.accent,
-  },
-  info: {
-    gap: SPACING.sm,
-  },
-  title: {
-    ...TYPOGRAPHY.h2,
-  },
-  id: {
-    ...TYPOGRAPHY.label,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
   },
   description: {
     ...TYPOGRAPHY.body,
     color: COLORS.textSecondary,
     lineHeight: 24,
     marginTop: SPACING.sm,
+  },
+  detailsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: SPACING.sm,
+    marginTop: SPACING.md,
+  },
+  detailItem: {
+    width: '47%',
+    backgroundColor: COLORS.card,
+    borderRadius: RADIUS.sm,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    padding: SPACING.sm,
+  },
+  detailLabel: {
+    ...TYPOGRAPHY.label,
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+    marginBottom: 4,
+  },
+  detailValue: {
+    ...TYPOGRAPHY.body,
+    fontWeight: '600',
+    textTransform: 'capitalize',
   },
   saveButton: {
     backgroundColor: COLORS.card,
@@ -155,9 +171,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.accent,
     borderColor: COLORS.accent,
   },
-  saveButtonPressed: {
-    opacity: 0.7,
-  },
+  saveButtonPressed: { opacity: 0.7 },
   saveButtonText: {
     ...TYPOGRAPHY.body,
     fontWeight: '600',

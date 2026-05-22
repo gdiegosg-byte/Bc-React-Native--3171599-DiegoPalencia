@@ -1,6 +1,5 @@
 // src/screens/HomeScreen.tsx
-// Pantalla principal: lista de ítems con navegación al detalle.
-// El estudiante debe adaptar el diseño y los campos a su dominio.
+// Pantalla principal: catálogo de productos de la vending machine.
 
 import React from 'react';
 import {
@@ -21,11 +20,13 @@ import type { HomeStackParamList } from '../navigation/types';
 
 type HomeScreenNavProp = NativeStackNavigationProp<HomeStackParamList, 'HomeList'>;
 
-// ============================================================
-// SUB-COMPONENTE: ItemCard
-// ============================================================
-// TODO: adaptar la tarjeta a las propiedades específicas de tu dominio.
-//   Mostrar, por ejemplo, price (Farmacia), author (Biblioteca), etc.
+const CATEGORY_LABEL: Record<string, string> = {
+  bebidas: '💧 Bebidas',
+  cafe: '☕ Café',
+  snacks: '🥔 Snacks',
+  dulces: '🍫 Dulces',
+  saludable: '🌾 Saludable',
+};
 
 interface ItemCardProps {
   item: Item;
@@ -33,16 +34,22 @@ interface ItemCardProps {
 }
 
 function ItemCard({ item, onPress }: ItemCardProps): React.JSX.Element {
+  const outOfStock = item.stock === 0;
+
   return (
     <Pressable
-      style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+      style={({ pressed }) => [
+        styles.card,
+        pressed && styles.cardPressed,
+        outOfStock && styles.cardDisabled,
+      ]}
       onPress={onPress}
+      disabled={outOfStock}
       testID={`item-card-${item.id}`}
     >
-      {/* Placeholder del thumbnail */}
+      {/* Emoji del producto */}
       <View style={styles.thumbnail}>
-        {/* TODO: reemplazar con imagen real usando expo-image o Image */}
-        <Text style={styles.thumbnailText}>{item.name.charAt(0)}</Text>
+        <Text style={styles.thumbnailEmoji}>{item.emoji}</Text>
       </View>
 
       <View style={styles.cardContent}>
@@ -52,30 +59,42 @@ function ItemCard({ item, onPress }: ItemCardProps): React.JSX.Element {
         <Text style={styles.cardDescription} numberOfLines={2}>
           {item.description}
         </Text>
-        {/* TODO: agregar campos específicos de tu dominio aquí */}
+        <View style={styles.cardMeta}>
+          <Text style={styles.cardCategory}>
+            {CATEGORY_LABEL[item.category] ?? item.category}
+          </Text>
+          <Text style={styles.cardCalories}>{item.calories} kcal</Text>
+        </View>
       </View>
 
-      <Text style={styles.chevron}>›</Text>
+      <View style={styles.cardRight}>
+        <Text style={styles.cardPrice}>
+          ${item.price.toLocaleString('es-CO')}
+        </Text>
+        <Text style={[styles.cardStock, outOfStock && { color: COLORS.error }]}>
+          {outOfStock ? 'Agotado' : `${item.stock} disp.`}
+        </Text>
+        <Text style={styles.chevron}>›</Text>
+      </View>
     </Pressable>
   );
 }
 
-// ============================================================
-// PANTALLA: HomeScreen
-// ============================================================
-
 export function HomeScreen(): React.JSX.Element {
   const navigation = useNavigation<HomeScreenNavProp>();
-
-  // TODO: leer los ítems desde un Zustand store (opcional bonus)
-  // o desde la API real de tu dominio (semana 5 — TanStack Query)
   const items = ITEMS;
 
   const renderItem: ListRenderItem<Item> = ({ item }) => (
     <ItemCard
       item={item}
       onPress={() =>
-        navigation.navigate('HomeDetail', { id: item.id, name: item.name })
+        navigation.navigate('HomeDetail', {
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          category: item.category,
+          emoji: item.emoji,
+        })
       }
     />
   );
@@ -88,23 +107,18 @@ export function HomeScreen(): React.JSX.Element {
         renderItem={renderItem}
         contentContainerStyle={styles.list}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        // TODO: agregar un header con estadísticas (total de ítems, etc.)
         ListHeaderComponent={
           <Text style={styles.sectionLabel}>
-            {items.length} ítem{items.length !== 1 ? 's' : ''}
+            {items.length} producto{items.length !== 1 ? 's' : ''} disponibles
           </Text>
         }
         ListEmptyComponent={
-          <Text style={styles.emptyText}>No hay ítems disponibles.</Text>
+          <Text style={styles.emptyText}>No hay productos disponibles.</Text>
         }
       />
     </View>
   );
 }
-
-// ============================================================
-// ESTILOS
-// ============================================================
 
 const styles = StyleSheet.create({
   container: {
@@ -134,21 +148,17 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     gap: SPACING.md,
   },
-  cardPressed: {
-    opacity: 0.7,
-  },
+  cardPressed: { opacity: 0.7 },
+  cardDisabled: { opacity: 0.4 },
   thumbnail: {
-    width: 48,
-    height: 48,
+    width: 52,
+    height: 52,
     borderRadius: RADIUS.sm,
     backgroundColor: COLORS.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  thumbnailText: {
-    ...TYPOGRAPHY.h3,
-    color: COLORS.accent,
-  },
+  thumbnailEmoji: { fontSize: 28 },
   cardContent: {
     flex: 1,
     gap: SPACING.xs,
@@ -159,6 +169,33 @@ const styles = StyleSheet.create({
   },
   cardDescription: {
     ...TYPOGRAPHY.caption,
+  },
+  cardMeta: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+    marginTop: 2,
+  },
+  cardCategory: {
+    ...TYPOGRAPHY.label,
+    fontSize: 11,
+  },
+  cardCalories: {
+    ...TYPOGRAPHY.label,
+    fontSize: 11,
+  },
+  cardRight: {
+    alignItems: 'flex-end',
+    gap: 4,
+  },
+  cardPrice: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: COLORS.accent,
+  },
+  cardStock: {
+    ...TYPOGRAPHY.label,
+    fontSize: 11,
+    color: COLORS.success,
   },
   chevron: {
     ...TYPOGRAPHY.h2,

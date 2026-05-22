@@ -1,7 +1,6 @@
 // src/screens/SavedScreen.tsx
-// Pantalla de guardados: muestra todos los ítems que el usuario guardó.
-// Lee el estado directamente desde el savedStore (sin props).
-// Demuestra que el mismo store Zustand mantiene consistencia entre tabs.
+// Pantalla de favoritos: productos que el usuario marcó como favoritos.
+// Lee el estado directamente desde el savedStore (Zustand).
 
 import React from 'react';
 import {
@@ -15,13 +14,7 @@ import {
 
 import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../theme';
 import type { Item } from '../types';
-
-// TODO: importar el store
-// import { useSavedStore } from '../stores/savedStore';
-
-// ============================================================
-// SUB-COMPONENTE: SavedItem
-// ============================================================
+import { useSavedStore } from '../stores/savedStore';
 
 interface SavedItemProps {
   item: Item;
@@ -32,12 +25,15 @@ function SavedItem({ item, onRemove }: SavedItemProps): React.JSX.Element {
   return (
     <View style={styles.card}>
       <View style={styles.thumbnail}>
-        <Text style={styles.thumbnailText}>{item.name.charAt(0)}</Text>
+        <Text style={styles.thumbnailEmoji}>{item.emoji}</Text>
       </View>
 
       <View style={styles.cardContent}>
         <Text style={styles.cardTitle} numberOfLines={1}>
           {item.name}
+        </Text>
+        <Text style={styles.cardPrice}>
+          ${item.price.toLocaleString('es-CO')} COP
         </Text>
         <Text style={styles.cardDescription} numberOfLines={1}>
           {item.description}
@@ -47,7 +43,7 @@ function SavedItem({ item, onRemove }: SavedItemProps): React.JSX.Element {
       <Pressable
         style={({ pressed }) => [styles.removeButton, pressed && { opacity: 0.6 }]}
         onPress={onRemove}
-        accessibilityLabel={`Quitar ${item.name} de guardados`}
+        accessibilityLabel={`Quitar ${item.name} de favoritos`}
       >
         <Text style={styles.removeButtonText}>✕</Text>
       </Pressable>
@@ -55,20 +51,10 @@ function SavedItem({ item, onRemove }: SavedItemProps): React.JSX.Element {
   );
 }
 
-// ============================================================
-// PANTALLA: SavedScreen
-// ============================================================
-
 export function SavedScreen(): React.JSX.Element {
-  // TODO: conectar con el savedStore
-  // const items     = useSavedStore((state) => state.items);
-  // const removeItem = useSavedStore((state) => state.removeItem);
-  // const clearAll  = useSavedStore((state) => state.clearAll);
-
-  // Placeholder hasta que el store esté implementado
-  const items: Item[] = [];
-  const removeItem = (_id: string): void => {};
-  const clearAll = (): void => {};
+  const items = useSavedStore((state) => state.items);
+  const removeItem = useSavedStore((state) => state.removeItem);
+  const clearAll = useSavedStore((state) => state.clearAll);
 
   const renderItem: ListRenderItem<Item> = ({ item }) => (
     <SavedItem item={item} onRemove={() => removeItem(item.id)} />
@@ -86,9 +72,8 @@ export function SavedScreen(): React.JSX.Element {
           items.length > 0 ? (
             <View style={styles.header}>
               <Text style={styles.sectionLabel}>
-                {items.length} guardado{items.length !== 1 ? 's' : ''}
+                {items.length} favorito{items.length !== 1 ? 's' : ''}
               </Text>
-              {/* TODO: botón "Limpiar todo" usando clearAll del store */}
               <Pressable onPress={clearAll} style={styles.clearButton}>
                 <Text style={styles.clearButtonText}>Limpiar todo</Text>
               </Pressable>
@@ -97,10 +82,10 @@ export function SavedScreen(): React.JSX.Element {
         }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyIcon}>☆</Text>
-            <Text style={styles.emptyTitle}>Sin guardados aún</Text>
+            <Text style={styles.emptyIcon}>🤍</Text>
+            <Text style={styles.emptyTitle}>Sin favoritos aún</Text>
             <Text style={styles.emptySubtitle}>
-              Ve a la lista principal y guarda tus ítems favoritos.
+              Ve al catálogo y marca tus productos favoritos de la vending machine.
             </Text>
           </View>
         }
@@ -108,10 +93,6 @@ export function SavedScreen(): React.JSX.Element {
     </View>
   );
 }
-
-// ============================================================
-// ESTILOS
-// ============================================================
 
 const styles = StyleSheet.create({
   container: {
@@ -134,16 +115,12 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 1,
   },
-  clearButton: {
-    padding: SPACING.xs,
-  },
+  clearButton: { padding: SPACING.xs },
   clearButtonText: {
     ...TYPOGRAPHY.caption,
     color: COLORS.error,
   },
-  separator: {
-    height: SPACING.sm,
-  },
+  separator: { height: SPACING.sm },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -155,28 +132,22 @@ const styles = StyleSheet.create({
     gap: SPACING.md,
   },
   thumbnail: {
-    width: 44,
-    height: 44,
+    width: 52,
+    height: 52,
     borderRadius: RADIUS.sm,
     backgroundColor: COLORS.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  thumbnailText: {
-    ...TYPOGRAPHY.h3,
+  thumbnailEmoji: { fontSize: 28 },
+  cardContent: { flex: 1, gap: SPACING.xs },
+  cardTitle: { ...TYPOGRAPHY.body, fontWeight: '600' },
+  cardPrice: {
+    fontSize: 15,
+    fontWeight: '800',
     color: COLORS.accent,
   },
-  cardContent: {
-    flex: 1,
-    gap: SPACING.xs,
-  },
-  cardTitle: {
-    ...TYPOGRAPHY.body,
-    fontWeight: '600',
-  },
-  cardDescription: {
-    ...TYPOGRAPHY.caption,
-  },
+  cardDescription: { ...TYPOGRAPHY.caption },
   removeButton: {
     width: 32,
     height: 32,
@@ -197,13 +168,8 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.xxl,
     gap: SPACING.md,
   },
-  emptyIcon: {
-    fontSize: 52,
-  },
-  emptyTitle: {
-    ...TYPOGRAPHY.h3,
-    color: COLORS.textSecondary,
-  },
+  emptyIcon: { fontSize: 52 },
+  emptyTitle: { ...TYPOGRAPHY.h3, color: COLORS.textSecondary },
   emptySubtitle: {
     ...TYPOGRAPHY.body,
     color: COLORS.textMuted,
