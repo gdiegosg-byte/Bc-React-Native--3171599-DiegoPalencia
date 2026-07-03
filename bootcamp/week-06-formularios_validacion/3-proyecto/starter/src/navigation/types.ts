@@ -1,5 +1,5 @@
 // src/navigation/types.ts
-// Tipado del stack de navegación
+// Tipado del stack de navegación — vending machines
 
 export type RootStackParamList = {
   Home:   undefined;

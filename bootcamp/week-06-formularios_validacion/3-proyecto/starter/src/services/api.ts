@@ -1,4 +1,4 @@
-// src/services/api.ts — Instancia centralizada de Axios
+// src/services/api.ts — Instancia Axios centralizada (vending machines)
 
 import axios from 'axios';
 
@@ -8,7 +8,6 @@ export const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Interceptor global de errores
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {

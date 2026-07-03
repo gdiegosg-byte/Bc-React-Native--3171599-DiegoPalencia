@@ -1,6 +1,5 @@
 // src/screens/HomeScreen.tsx
-// Lista de ítems con pull-to-refresh y acceso a Create / Edit.
-// Esta pantalla ya está funcional — no requiere TODOs.
+// Lista de productos con pull-to-refresh y acceso a Create / Edit.
 
 import React from 'react';
 import {
@@ -15,19 +14,15 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../theme';
-import { useItems } from '../hooks/useItems';
-import type { Item } from '../types';
+import { useProductos } from '../hooks/useProducts';
+import type { Producto } from '../types';
 import type { RootStackParamList } from '../navigation/types';
 
 type HomeNavProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
-// ──────────────────────────────────────────────
-// PANTALLA
-// ──────────────────────────────────────────────
-
 export function HomeScreen(): React.JSX.Element {
   const navigation = useNavigation<HomeNavProp>();
-  const { data, isLoading, isError, isFetching, refetch } = useItems();
+  const { data, isLoading, isError, isFetching, refetch } = useProductos();
 
   if (isLoading) {
     return (
@@ -56,17 +51,17 @@ export function HomeScreen(): React.JSX.Element {
       keyExtractor={(item) => String(item.id)}
       refreshing={isFetching && !isLoading}
       onRefresh={refetch}
-      ListEmptyComponent={<Text style={styles.empty}>No hay ítems aún</Text>}
+      ListEmptyComponent={<Text style={styles.empty}>No hay productos aún</Text>}
       ListHeaderComponent={
         data?.length
-          ? <Text style={styles.count}>{data.length} ítems</Text>
+          ? <Text style={styles.count}>{data.length} productos</Text>
           : null
       }
       renderItem={({ item }) => (
-        <ItemRow
-          item={item}
+        <ProductoRow
+          producto={item}
           onPress={() =>
-            navigation.navigate('Edit', { id: item.id, name: item.title })
+            navigation.navigate('Edit', { id: item.id, name: item.name })
           }
         />
       )}
@@ -74,32 +69,24 @@ export function HomeScreen(): React.JSX.Element {
   );
 }
 
-// ──────────────────────────────────────────────
-// SUB-COMPONENTE: fila de ítem
-// ──────────────────────────────────────────────
+interface ProductoRowProps { producto: Producto; onPress: () => void }
 
-interface ItemRowProps { item: Item; onPress: () => void }
-
-function ItemRow({ item, onPress }: ItemRowProps): React.JSX.Element {
+function ProductoRow({ producto, onPress }: ProductoRowProps): React.JSX.Element {
   return (
     <Pressable style={styles.row} onPress={onPress}>
       <View style={styles.rowLeft}>
         <View style={styles.avatar}>
-          <Text style={styles.avatarLetter}>{item.title.charAt(0).toUpperCase()}</Text>
+          <Text style={styles.avatarLetter}>{producto.name.charAt(0).toUpperCase()}</Text>
         </View>
         <View style={styles.rowText}>
-          <Text style={styles.rowTitle} numberOfLines={1}>{item.title}</Text>
-          <Text style={styles.rowSub} numberOfLines={1}>{item.body}</Text>
+          <Text style={styles.rowTitle} numberOfLines={1}>{producto.name}</Text>
+          <Text style={styles.rowSub} numberOfLines={1}>{producto.category} · ${producto.price} · Stock: {producto.stock}</Text>
         </View>
       </View>
       <Text style={styles.chevron}>›</Text>
     </Pressable>
   );
 }
-
-// ──────────────────────────────────────────────
-// ESTILOS
-// ──────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   list: { flex: 1, backgroundColor: COLORS.background },

@@ -1,23 +1,28 @@
 // src/types/index.ts
-// Tipos de datos del dominio — adapta los campos a tu dominio asignado
+// Tipos del dominio — Máquinas expendedoras (vending machines)
 
-export interface Item {
+export interface Producto {
   id: number;
-  title: string;   // TODO: renombrar al concepto de tu dominio (ej. name, productName)
-  body: string;    // TODO: renombrar (ej. description, notes)
-  userId: number;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  category: string;
 }
 
-// Payload para crear un ítem nuevo (sin id — lo asigna el servidor)
-export interface CreateItemPayload {
-  title: string;
-  body: string;
-  userId: number;
+export interface CreateProductoPayload {
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  category: string;
 }
 
-// Payload para actualizar (id requerido + campos editables)
-export interface UpdateItemPayload {
+export interface UpdateProductoPayload {
   id: number;
-  title: string;
-  body: string;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  category: string;
 }
