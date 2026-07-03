@@ -1,7 +1,5 @@
 // src/screens/HomeScreen.tsx
-// Lista de ítems con soporte offline (caché AsyncStorage) y
-// respeto de las preferencias del usuario (orden, modo compacto).
-// Esta pantalla está COMPLETAMENTE IMPLEMENTADA — es el punto de partida.
+// Lista de productos con soporte offline (caché AsyncStorage) y preferencias.
 
 import React, { useCallback } from 'react';
 import {
@@ -13,31 +11,29 @@ import {
   View,
 } from 'react-native';
 import type { HomeScreenProps } from '../navigation/types';
-import { useItems } from '../hooks/useItems';
+import { useProductos } from '../hooks/useProducts';
 import { usePreferences } from '../hooks/usePreferences';
 import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../theme';
-import type { Item } from '../types';
+import type { Producto } from '../types';
 
-// ─── Sub-componente: fila de ítem ────────────────────────────────────────────
-
-interface ItemRowProps {
-  item: Item;
+interface ProductoRowProps {
+  producto: Producto;
   compact: boolean;
 }
 
-function ItemRow({ item, compact }: ItemRowProps): React.JSX.Element {
+function ProductoRow({ producto, compact }: ProductoRowProps): React.JSX.Element {
   return (
     <View style={[styles.row, compact && styles.rowCompact]}>
       <View style={styles.avatar}>
-        <Text style={styles.avatarText}>{String(item.id)}</Text>
+        <Text style={styles.avatarText}>{String(producto.name.charAt(0).toUpperCase())}</Text>
       </View>
       <View style={styles.rowContent}>
         <Text style={styles.rowTitle} numberOfLines={compact ? 1 : 2}>
-          {item.title}
+          {producto.name}
         </Text>
         {!compact && (
           <Text style={styles.rowBody} numberOfLines={2}>
-            {item.body}
+            {producto.category} · ${producto.price} · Stock: {producto.stock}
           </Text>
         )}
       </View>
@@ -45,25 +41,22 @@ function ItemRow({ item, compact }: ItemRowProps): React.JSX.Element {
   );
 }
 
-// ─── Pantalla ────────────────────────────────────────────────────────────────
-
 export function HomeScreen({ navigation }: HomeScreenProps): React.JSX.Element {
-  const { data, isLoading, isError, refetch, isFetching } = useItems();
+  const { data, isLoading, isError, refetch, isFetching } = useProductos();
   const { sortOrder, compactMode } = usePreferences();
 
-  // Aplicar ordenación de la preferencia MMKV
   const sortedItems = React.useMemo(() => {
     if (!data?.items) return [];
     return [...data.items].sort((a, b) =>
       sortOrder === 'asc'
-        ? a.title.localeCompare(b.title)
-        : b.title.localeCompare(a.title),
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name),
     );
   }, [data?.items, sortOrder]);
 
   const renderItem = useCallback(
-    ({ item }: { item: Item }) => (
-      <ItemRow item={item} compact={compactMode} />
+    ({ item }: { item: Producto }) => (
+      <ProductoRow producto={item} compact={compactMode} />
     ),
     [compactMode],
   );
@@ -89,7 +82,6 @@ export function HomeScreen({ navigation }: HomeScreenProps): React.JSX.Element {
 
   return (
     <View style={styles.container}>
-      {/* Banner offline — visible cuando los datos vienen del cache */}
       {data?.source === 'cache' && (
         <View style={styles.offlineBanner}>
           <Text style={styles.offlineText}>
@@ -109,22 +101,20 @@ export function HomeScreen({ navigation }: HomeScreenProps): React.JSX.Element {
         ListHeaderComponent={
           <View style={styles.listHeader}>
             <Text style={styles.listHeaderText}>
-              {sortedItems.length} ítems · Orden: {sortOrder === 'asc' ? 'A→Z' : 'Z→A'}
+              {sortedItems.length} productos · Orden: {sortOrder === 'asc' ? 'A→Z' : 'Z→A'}
               {compactMode ? ' · Compacto' : ''}
             </Text>
           </View>
         }
         ListEmptyComponent={
           <View style={styles.centered}>
-            <Text style={TYPOGRAPHY.body}>No hay ítems</Text>
+            <Text style={TYPOGRAPHY.body}>No hay productos</Text>
           </View>
         }
       />
     </View>
   );
 }
-
-// ─── Estilos ─────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },

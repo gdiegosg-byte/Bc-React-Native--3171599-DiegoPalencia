@@ -1,35 +1,34 @@
 // src/services/api.ts
 import axios from 'axios';
-import type { Item } from '../types';
+import type { Producto } from '../types';
 
-// JSONPlaceholder como backend de práctica
 const api = axios.create({
   baseURL: 'https://jsonplaceholder.typicode.com',
   timeout: 8000,
   headers: { 'Content-Type': 'application/json' },
 });
 
-export async function fetchItems(): Promise<Item[]> {
-  const { data } = await api.get<Item[]>('/posts', { params: { _limit: 15 } });
+export async function fetchProductos(): Promise<Producto[]> {
+  const { data } = await api.get<Producto[]>('/posts', { params: { _limit: 15 } });
   return data;
 }
 
-export async function fetchItemById(id: number | string): Promise<Item> {
-  const { data } = await api.get<Item>(`/posts/${id}`);
+export async function fetchProductoById(id: number | string): Promise<Producto> {
+  const { data } = await api.get<Producto>(`/posts/${id}`);
   return data;
 }
 
-export async function createItem(
-  payload: Omit<Item, 'id'>,
-): Promise<Item> {
-  const { data } = await api.post<Item>('/posts', payload);
+export async function createProducto(
+  payload: Omit<Producto, 'id'>,
+): Promise<Producto> {
+  const { data } = await api.post<Producto>('/posts', payload);
   return data;
 }
 
-export async function updateItem(
+export async function updateProducto(
   id: number | string,
-  payload: Partial<Omit<Item, 'id'>>,
-): Promise<Item> {
-  const { data } = await api.put<Item>(`/posts/${id}`, payload);
+  payload: Partial<Omit<Producto, 'id'>>,
+): Promise<Producto> {
+  const { data } = await api.put<Producto>(`/posts/${id}`, payload);
   return data;
 }

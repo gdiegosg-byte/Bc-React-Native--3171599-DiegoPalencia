@@ -1,6 +1,5 @@
 // src/screens/CreateScreen.tsx
-// Formulario para crear un nuevo ítem.
-// Reutilizado de semana 06 — ya implementado con RHF + Zod.
+// Formulario para crear un nuevo producto (vending machine)
 
 import React from 'react';
 import {
@@ -21,8 +20,8 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../theme';
 import type { RootStackParamList } from '../navigation/types';
 import { FormField } from '../components/FormField';
-import { itemSchema, type ItemFormData } from '../schemas/itemSchema';
-import { useCreateItem } from '../hooks/useItems';
+import { productoSchema, type ProductoFormData } from '../schemas/productoSchema';
+import { useCreateProducto } from '../hooks/useProducts';
 
 type CreateNavProp = NativeStackNavigationProp<RootStackParamList, 'Create'>;
 
@@ -33,16 +32,22 @@ export function CreateScreen(): React.JSX.Element {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<ItemFormData>({
-    resolver: zodResolver(itemSchema),
-    defaultValues: { title: '', body: '' },
+  } = useForm<ProductoFormData>({
+    resolver: zodResolver(productoSchema),
+    defaultValues: { name: '', description: '', price: undefined, stock: undefined, category: '' },
   });
 
-  const { mutate: createItem, isPending } = useCreateItem();
+  const { mutate: createProducto, isPending } = useCreateProducto();
 
-  function onSubmit(data: ItemFormData): void {
-    createItem(
-      { title: data.title, body: data.body ?? '', userId: 1 },
+  function onSubmit(data: ProductoFormData): void {
+    createProducto(
+      {
+        name: data.name,
+        description: data.description ?? '',
+        price: data.price,
+        stock: data.stock ?? 0,
+        category: data.category,
+      },
       { onSuccess: () => navigation.goBack() },
     );
   }
@@ -59,31 +64,52 @@ export function CreateScreen(): React.JSX.Element {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
-        <Text style={styles.hint}>
-          Adapta los campos a tu dominio asignado.
-        </Text>
-
         <FormField
           control={control}
-          name="title"
+          name="name"
           label="Nombre *"
-          placeholder="Nombre del ítem…"
+          placeholder="Ej: Coca Cola, Papas Lays..."
           returnKeyType="next"
-          errorMessage={errors.title?.message}
+          errorMessage={errors.name?.message}
         />
 
         <FormField
           control={control}
-          name="body"
-          label="Descripción"
-          placeholder="Descripción opcional…"
-          multiline
-          numberOfLines={4}
-          textAlignVertical="top"
-          errorMessage={errors.body?.message}
+          name="category"
+          label="Categoría *"
+          placeholder="Ej: Bebidas, Snacks, Dulces..."
+          returnKeyType="next"
+          errorMessage={errors.category?.message}
         />
 
-        {/* TODO: agrega campos adicionales de tu dominio */}
+        <FormField
+          control={control}
+          name="price"
+          label="Precio *"
+          placeholder="0.00"
+          keyboardType="decimal-pad"
+          errorMessage={errors.price?.message}
+        />
+
+        <FormField
+          control={control}
+          name="stock"
+          label="Stock"
+          placeholder="0"
+          keyboardType="number-pad"
+          errorMessage={errors.stock?.message}
+        />
+
+        <FormField
+          control={control}
+          name="description"
+          label="Descripción"
+          placeholder="Descripción opcional..."
+          multiline
+          numberOfLines={3}
+          textAlignVertical="top"
+          errorMessage={errors.description?.message}
+        />
 
         <View style={styles.actions}>
           <Pressable
@@ -93,7 +119,7 @@ export function CreateScreen(): React.JSX.Element {
           >
             {isSubmitting || isPending
               ? <ActivityIndicator size="small" color={COLORS.background} />
-              : <Text style={styles.buttonText}>Crear ítem</Text>
+              : <Text style={styles.buttonText}>Crear producto</Text>
             }
           </Pressable>
 
