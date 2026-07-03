@@ -1,6 +1,5 @@
 // src/screens/HomeScreen.tsx
-// Pantalla principal: lista de ítems cargada desde la API.
-// TODO: conectar con useItems() y manejar todos los estados de red.
+// Pantalla principal: lista de productos (vending machines)
 
 import React from 'react';
 import {
@@ -16,76 +15,51 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../theme';
-import type { Item } from '../types';
+import type { Producto } from '../types';
 import type { RootStackParamList } from '../navigation/types';
-
-// TODO: importar el hook de fetching
-// import { useItems } from '../hooks/useItems';
 
 type HomeNavProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
-// ============================================================
-// SUB-COMPONENTE: ItemCard
-// ============================================================
-
-interface ItemCardProps {
-  item: Item;
+interface ProductoCardProps {
+  producto: Producto;
   onPress: () => void;
 }
 
-function ItemCard({ item, onPress }: ItemCardProps): React.JSX.Element {
+function ProductoCard({ producto, onPress }: ProductoCardProps): React.JSX.Element {
   return (
     <Pressable
       style={({ pressed }) => [styles.card, pressed && { opacity: 0.7 }]}
       onPress={onPress}
-      testID={`item-card-${item.id}`}
+      testID={`producto-card-${producto.id}`}
     >
       <View style={styles.cardAvatar}>
-        {/* TODO: mostrar imagen del ítem si tu API la provee */}
         <Text style={styles.cardAvatarText}>
-          {String(item.name).charAt(0).toUpperCase()}
+          {String(producto.name).charAt(0).toUpperCase()}
         </Text>
       </View>
       <View style={styles.cardContent}>
         <Text style={styles.cardTitle} numberOfLines={1}>
-          {/* TODO: cambiar 'name' por el campo principal de tu dominio */}
-          {item.name}
+          {producto.name}
         </Text>
-        {item.description && (
-          <Text style={styles.cardSubtitle} numberOfLines={2}>
-            {item.description}
-          </Text>
-        )}
-        {/* TODO: mostrar campos adicionales de tu dominio */}
-        {/* Ejemplo: <Text style={styles.badge}>{item.price} €</Text> */}
+        <Text style={styles.cardSubtitle} numberOfLines={1}>
+          {producto.category} · ${producto.price} · Stock: {producto.stock}
+        </Text>
       </View>
       <Text style={styles.chevron}>›</Text>
     </Pressable>
   );
 }
 
-// ============================================================
-// PANTALLA: HomeScreen
-// ============================================================
-
 export function HomeScreen(): React.JSX.Element {
   const navigation = useNavigation<HomeNavProp>();
 
-  // TODO: reemplaza este bloque con el hook real
-  // ──────────────────────────────────────────
-  // const { data, isLoading, isError, isFetching, refetch, error } = useItems();
-  //
-  // Placeholders hasta que implementes el hook:
   const isLoading = false;
   const isError = false;
   const isFetching = false;
-  const data: Item[] | undefined = undefined;
+  const data: Producto[] | undefined = undefined;
   const refetch = (): void => {};
   const error: Error | null = null;
 
-  // ── Estados de carga ─────────────────────────────────────
-
-  // TODO: mostrar spinner solo en el primer fetch (sin caché)
   if (isLoading) {
     return (
       <View style={styles.centered}>
@@ -95,7 +69,6 @@ export function HomeScreen(): React.JSX.Element {
     );
   }
 
-  // TODO: mostrar error con botón de reintentar
   if (isError) {
     return (
       <View style={styles.centered}>
@@ -108,9 +81,9 @@ export function HomeScreen(): React.JSX.Element {
     );
   }
 
-  const renderItem: ListRenderItem<Item> = ({ item }) => (
-    <ItemCard
-      item={item}
+  const renderItem: ListRenderItem<Producto> = ({ item }) => (
+    <ProductoCard
+      producto={item}
       onPress={() =>
         navigation.navigate('Detail', {
           id: item.id,
@@ -125,7 +98,7 @@ export function HomeScreen(): React.JSX.Element {
       {!data ? (
         <View style={styles.centered}>
           <Text style={styles.hint}>
-            Implementa useItems() en src/hooks/useItems.ts para ver los datos
+            Implementa useProductos() en src/hooks/useProducts.ts para ver los datos
           </Text>
         </View>
       ) : (
@@ -135,17 +108,16 @@ export function HomeScreen(): React.JSX.Element {
           renderItem={renderItem}
           contentContainerStyle={styles.list}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
-          // TODO: pull-to-refresh con refetch
           onRefresh={refetch}
           refreshing={isFetching && !isLoading}
           ListEmptyComponent={
             <View style={styles.centered}>
-              <Text style={styles.emptyText}>No hay ítems disponibles.</Text>
+              <Text style={styles.emptyText}>No hay productos disponibles.</Text>
             </View>
           }
           ListHeaderComponent={
             <Text style={styles.countLabel}>
-              {data.length} ítem{data.length !== 1 ? 's' : ''}
+              {data.length} producto{data.length !== 1 ? 's' : ''}
             </Text>
           }
         />
@@ -153,10 +125,6 @@ export function HomeScreen(): React.JSX.Element {
     </View>
   );
 }
-
-// ============================================================
-// ESTILOS
-// ============================================================
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },

@@ -1,6 +1,5 @@
 // src/screens/CreateScreen.tsx
-// Pantalla modal para crear un nuevo ítem.
-// El aprendiz debe conectar useMutation y manejar el retorno al listado.
+// Pantalla modal para crear un nuevo producto (vending machine)
 
 import React, { useState } from 'react';
 import {
@@ -20,45 +19,25 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS, RADIUS, SPACING, TYPOGRAPHY } from '../theme';
 import type { RootStackParamList } from '../navigation/types';
 
-// TODO: importar el hook de creación
-// import { useCreateItem } from '../hooks/useItems';
-
 type CreateNavProp = NativeStackNavigationProp<RootStackParamList, 'Create'>;
-
-// ============================================================
-// PANTALLA: CreateScreen
-// ============================================================
 
 export function CreateScreen(): React.JSX.Element {
   const navigation = useNavigation<CreateNavProp>();
 
-  // Campos del formulario — adapta al dominio asignado
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [stock, setStock] = useState('');
+  const [category, setCategory] = useState('');
 
-  // TODO: conectar useMutation para crear el ítem
-  // ─────────────────────────────────────────────
-  // const { mutate: createItem, isPending } = useCreateItem();
-  //
-  // Placeholder en tanto se completa el TODO:
   const isPending = false;
 
   function handleSubmit(): void {
-    if (!title.trim()) return;
-
-    // TODO: llamar mutate con los datos del formulario
-    // ─────────────────────────────────────────────────
-    // createItem(
-    //   { title, body },
-    //   {
-    //     // onSuccess se ejecuta TRAS invalidateQueries del hook
-    //     onSuccess: () => navigation.goBack(),
-    //   },
-    // );
-    console.log('TODO: implementar createItem({ title, body })');
+    if (!name.trim() || !price.trim()) return;
+    console.log('TODO: implementar createProducto({ name, description, price, stock, category })');
   }
 
-  const canSubmit = title.trim().length > 0 && !isPending;
+  const canSubmit = name.trim().length > 0 && price.trim().length > 0 && !isPending;
 
   return (
     <KeyboardAvoidingView
@@ -70,47 +49,75 @@ export function CreateScreen(): React.JSX.Element {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
-        <Text style={styles.sectionLabel}>Datos del nuevo ítem</Text>
+        <Text style={styles.sectionLabel}>Datos del nuevo producto</Text>
 
-        {/* Campo nombre / título */}
         <View style={styles.field}>
           <Text style={styles.fieldLabel}>
-            Nombre{' '}
-            <Text style={styles.required}>*</Text>
+            Nombre <Text style={styles.required}>*</Text>
           </Text>
           <TextInput
             style={styles.input}
-            value={title}
-            onChangeText={setTitle}
-            placeholder="Nombre del ítem…"
+            value={name}
+            onChangeText={setName}
+            placeholder="Ej: Coca Cola, Papas Lays..."
             placeholderTextColor={COLORS.textMuted}
             returnKeyType="next"
           />
         </View>
 
-        {/* TODO: agregar campos adicionales para tu dominio */}
-        {/* Por ejemplo:                                     */}
-        {/* <View style={styles.field}>                       */}
-        {/*   <Text style={styles.fieldLabel}>Precio</Text>  */}
-        {/*   <TextInput … />                                 */}
-        {/* </View>                                           */}
+        <View style={styles.field}>
+          <Text style={styles.fieldLabel}>Categoría</Text>
+          <TextInput
+            style={styles.input}
+            value={category}
+            onChangeText={setCategory}
+            placeholder="Ej: Bebidas, Snacks, Dulces..."
+            placeholderTextColor={COLORS.textMuted}
+            returnKeyType="next"
+          />
+        </View>
 
-        {/* Campo descripción / cuerpo (genérico) */}
+        <View style={styles.fieldRow}>
+          <View style={styles.fieldHalf}>
+            <Text style={styles.fieldLabel}>
+              Precio <Text style={styles.required}>*</Text>
+            </Text>
+            <TextInput
+              style={styles.input}
+              value={price}
+              onChangeText={setPrice}
+              placeholder="0.00"
+              placeholderTextColor={COLORS.textMuted}
+              keyboardType="decimal-pad"
+            />
+          </View>
+          <View style={styles.fieldHalf}>
+            <Text style={styles.fieldLabel}>Stock</Text>
+            <TextInput
+              style={styles.input}
+              value={stock}
+              onChangeText={setStock}
+              placeholder="0"
+              placeholderTextColor={COLORS.textMuted}
+              keyboardType="number-pad"
+            />
+          </View>
+        </View>
+
         <View style={styles.field}>
           <Text style={styles.fieldLabel}>Descripción</Text>
           <TextInput
             style={[styles.input, styles.multiline]}
-            value={body}
-            onChangeText={setBody}
-            placeholder="Descripción opcional…"
+            value={description}
+            onChangeText={setDescription}
+            placeholder="Descripción opcional..."
             placeholderTextColor={COLORS.textMuted}
             multiline
-            numberOfLines={4}
+            numberOfLines={3}
             textAlignVertical="top"
           />
         </View>
 
-        {/* Botón de envío */}
         <Pressable
           style={[styles.button, !canSubmit && styles.buttonDisabled]}
           onPress={handleSubmit}
@@ -119,11 +126,10 @@ export function CreateScreen(): React.JSX.Element {
           {isPending ? (
             <ActivityIndicator size="small" color={COLORS.background} />
           ) : (
-            <Text style={styles.buttonText}>Crear ítem</Text>
+            <Text style={styles.buttonText}>Crear producto</Text>
           )}
         </Pressable>
 
-        {/* Botón cancelar */}
         <Pressable style={styles.cancel} onPress={() => navigation.goBack()}>
           <Text style={styles.cancelText}>Cancelar</Text>
         </Pressable>
@@ -132,16 +138,14 @@ export function CreateScreen(): React.JSX.Element {
   );
 }
 
-// ============================================================
-// ESTILOS
-// ============================================================
-
 const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: COLORS.background },
   container: { flex: 1 },
   content: { padding: SPACING.lg, gap: SPACING.md, paddingBottom: SPACING.xxl },
   sectionLabel: { ...TYPOGRAPHY.label, textTransform: 'uppercase', letterSpacing: 0.8 },
   field: { gap: SPACING.xs },
+  fieldRow: { flexDirection: 'row', gap: SPACING.md },
+  fieldHalf: { flex: 1, gap: SPACING.xs },
   fieldLabel: { ...TYPOGRAPHY.body, fontWeight: '600' },
   required: { color: COLORS.error },
   input: {
@@ -153,7 +157,7 @@ const styles = StyleSheet.create({
     ...TYPOGRAPHY.body,
     color: COLORS.text,
   },
-  multiline: { minHeight: 96, paddingTop: SPACING.sm },
+  multiline: { minHeight: 80, paddingTop: SPACING.sm },
   button: {
     backgroundColor: COLORS.accent,
     borderRadius: RADIUS.sm,
